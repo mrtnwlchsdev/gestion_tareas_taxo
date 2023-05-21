@@ -40,6 +40,7 @@ const button_label = ref("Nueva tarea");
 // Enlaces de paginacion
 const links = ref([]);
 
+// Filtrar tareas marcadas como favoritas
 const filterFavorites = (param) => {
     favorites.value = param;
 };
@@ -57,7 +58,7 @@ const onFilterTag = (param) => {
 
 const filterTasks = computed(() => {
     if (search.value) {
-        return props.all_tasks.filter((item) => {
+        return tasksStore.getAllTasks.filter((item) => {
             return (
                 item.task_title
                     .toLowerCase()
@@ -70,7 +71,7 @@ const filterTasks = computed(() => {
             );
         });
     } else if (favorites.value) {
-        return props.all_tasks.filter((item) => {
+        return tasksStore.getAllTasks.filter((item) => {
             return item.favorite_task == 1;
         });
     } else {
@@ -80,6 +81,7 @@ const filterTasks = computed(() => {
 
 onMounted(async () => {
     links.value = props.tasks_pagination.links;
+    tasksStore.setAllTasks(props.all_tasks);
     tasksStore.setTasks(props.tasks_pagination.data);
 });
 </script>
@@ -89,7 +91,7 @@ onMounted(async () => {
         <header>
             <Navigation :login="true" />
         </header>
-        <article class="container mt-[100px] mx-auto py-5 px-3">
+        <article class="container mt-[100px] mx-auto py-5 px-3 pb-10">
             <article
                 v-if="error_message"
                 class="w-1/2 mb-10 mx-auto p-4 rounded-md bg-light-grey shadow-lg"
@@ -143,7 +145,7 @@ onMounted(async () => {
         <!-- Diseño de la paginación, permitiendo mostra máximo 9 tareas por página -->
         <section v-if="all_tasks.length > 9 && !search">
             <ul
-                class="absolute bottom-10 right-10 flex justify-center items-center gap-2"
+                class="absolute bottom-5 right-10 flex justify-center items-center gap-2"
             >
                 <li
                     v-for="(item, index) in links"

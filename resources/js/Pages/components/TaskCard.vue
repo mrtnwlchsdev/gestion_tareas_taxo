@@ -38,6 +38,9 @@ const favoriteTask = async () => {
         await api.put(routes.update_favorite_task, {
             id: props.data.id,
         });
+
+        tasksStore.updateFavorite(props.data.id);
+        tasksStore.updateFavoriteAll(props.data.id);
     } catch (error) {
         emit("updateTaskError", "Ocurrió un error al actualizar la tarea");
     }
@@ -82,6 +85,7 @@ const saveTask = async (id) => {
             id: props.data.id,
         });
 
+        tasksStore.updateAllTasks(task_description.value, task_title.value, id);
         tasksStore.updateTasks(task_description.value, task_title.value, id);
     } catch (error) {
         emit("updateTaskError", "Ocurrió un error al actualizar la tarea");
