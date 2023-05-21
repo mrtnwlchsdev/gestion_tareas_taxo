@@ -15,27 +15,26 @@ Clonar el proyecto
 
 Instalar dependencias
 
+PHP
+
     composer install
+
+JavaScript
+
     npm install
 
 Desde la ruta del proyecto ejecutar 2 terminales.
 
-En la primera terminal ejecutar el siguiente comando para levantar el servicio del front
+En la primera terminal ejecutar el siguiente comando para levantar el servicio del front ** Por defecto se ejecuta en el puerto 5173 del localhost
 
     npm run dev
 
-    ** Por defecto se ejecuta en el puerto 5173 del localhost
-
-En la segunda terminal ejecutar el siguiente comando para levantar el servicio del back
+En la segunda terminal ejecutar el siguiente comando para levantar el servicio del back ** Por defecto se ejecuta en el puerto 8000 del localhost
 
     php artisan serve
 
-    ** Por defecto se ejecuta en el puerto 8000 del localhost
-
 La aplicacion es visualizada en la ruta donde se ejecuta el back.
 
-La base de datos configurada por defecto ha sido nombrada taxo, se debe realizar la configuración del .env en caso de utilizar credenciales distintas. Además se debe crear la base de datos antes de ejecutar la migración.
-
-Ejecutar las migraciones antes de utilizar el proyecto
+La base de datos configurada por defecto para el proceso de prueba ha sido nombrada taxo, se debe realizar la configuración del .env para la la correcta conexión con la base de datos. Además se debe crear la base de datos (en mi caso utilice MySQL) antes de ejecutar la siguiente migración e iniciar a usar la aplicación.
 
     php artisan migrate:refresh
