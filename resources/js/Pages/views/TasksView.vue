@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 
 // Componentes
 import Navigation from "@/Pages/components/Navigation.vue";
@@ -12,11 +12,15 @@ import { useTasksStore } from "@/store";
 const tasksStore = useTasksStore();
 
 const props = defineProps({
-    tasks: {
+    tasks_pagination: {
         type: Object,
-        required: true
-    }
-})
+        required: true,
+    },
+    all_tasks: {
+        type: Object,
+        required: true,
+    },
+});
 
 // Mensajes de alerta durante el proceso de eliminación de una tarea
 const error_message = ref("");
@@ -28,10 +32,17 @@ const resetMessage = () => {
     }, 3000);
 };
 
+const favorites = ref(false);
+const search = ref("");
+
 const button_label = ref("Nueva tarea");
 
 // Enlaces de paginacion
 const links = ref([]);
+
+const filterFavorites = (param) => {
+    favorites.value = param;
+};
 
 // Recepción del evento emitido desde el componente TaskCard si no se puede eliminar una tarea
 const onUpdateTaskError = (param) => {
@@ -39,9 +50,37 @@ const onUpdateTaskError = (param) => {
     resetMessage();
 };
 
+// Filtrar tareas por etiquetas
+const onFilterTag = (param) => {
+    search.value = param;
+};
+
+const filterTasks = computed(() => {
+    if (search.value) {
+        return props.all_tasks.filter((item) => {
+            return (
+                item.task_title
+                    .toLowerCase()
+                    .includes(search.value.toLowerCase()) ||
+                item.task_description
+                    .toLowerCase()
+                    .includes(search.value.toLowerCase()) ||
+                // Se filtran las tareas por etiquetas
+                item.tags.split(",").includes(search.value.toLowerCase())
+            );
+        });
+    } else if (favorites.value) {
+        return props.all_tasks.filter((item) => {
+            return item.favorite_task == 1;
+        });
+    } else {
+        return tasksStore.getTasks;
+    }
+});
+
 onMounted(async () => {
-    links.value = props.tasks.links;
-    tasksStore.setTasks(props.tasks.data);
+    links.value = props.tasks_pagination.links;
+    tasksStore.setTasks(props.tasks_pagination.data);
 });
 </script>
 
@@ -50,7 +89,7 @@ onMounted(async () => {
         <header>
             <Navigation :login="true" />
         </header>
-        <article class="container mt-[100px] mx-auto py-5">
+        <article class="container mt-[100px] mx-auto py-5 px-3">
             <article
                 v-if="error_message"
                 class="w-1/2 mb-10 mx-auto p-4 rounded-md bg-light-grey shadow-lg"
@@ -67,24 +106,45 @@ onMounted(async () => {
                 {{ button_label }}
             </Link>
 
+            <!-- Buscador de tareas -->
+            <section class="flex justify-center items-center w-full mt-10">
+                <input
+                    type="text"
+                    class="w-full py-3 px-4 shadow-lg rounded-full text-sm text-black bg-white focus:outline-none"
+                    placeholder="Buscar tarea"
+                    v-model="search"
+                />
+            </section>
+
+            <section class="flex gap-3">
+                <button class="favorite_button" @click="filterFavorites(true)">
+                    Favoritas
+                </button>
+                <button class="favorite_button" @click="filterFavorites(false)">
+                    Todas
+                </button>
+            </section>
+
             <section
                 class="relative grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10"
             >
                 <TaskCard
-                    v-for="(item, index) in tasksStore.getTasks"
+                    v-for="(item, index) in filterTasks"
                     :data="item"
                     :key="index"
+                    @filterTag="onFilterTag"
                     @updateTaskError="onUpdateTaskError"
                 />
 
-                <article class="absolute bottom-0 right-0">
-                </article>
+                <article class="absolute bottom-0 right-0"></article>
             </section>
         </article>
 
         <!-- Diseño de la paginación, permitiendo mostra máximo 9 tareas por página -->
-        <section v-if="tasksStore.getTasks.length > 9">
-            <ul class="absolute bottom-10 right-10 flex justify-center items-center gap-2">
+        <section v-if="all_tasks.length > 9 && !search">
+            <ul
+                class="absolute bottom-10 right-10 flex justify-center items-center gap-2"
+            >
                 <li
                     v-for="(item, index) in links"
                     :key="index"
@@ -103,4 +163,8 @@ onMounted(async () => {
     </main>
 </template>
 
-<style></style>
+<style lang="scss" scoped>
+.favorite_button {
+    @apply text-center mt-6 py-2 px-6 rounded-md text-sm text-white bg-black duration-200 border-solid border-2 border-transparent hover:bg-white hover:text-black hover:border-black;
+}
+</style>

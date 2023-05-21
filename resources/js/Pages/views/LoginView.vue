@@ -59,13 +59,13 @@ const onLogin = async () => {
         resetMessage();
         return;
     } else {
+        // Redireccionar al usuario a la vista de tareas cuando este ha iniciado sesión
+        // ** Trate de usar el enrutamiento desde el controlador pero no fue posible, asi que lo hice desde el frontend
+        window.location.href = "/tasks";
+
         email.value = "";
         password.value = "";
         resetMessage();
-
-        // Redireccionar al usuario a la vista de tareas cuando este ha iniciado sesión
-        // ** Trate de usar el enrutamiento desde el controlador pero no fue posible, asi que lo hice desde el frontend
-        window.location.href = '/tasks';
         return;
     }
 };

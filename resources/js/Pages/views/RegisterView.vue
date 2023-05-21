@@ -83,7 +83,7 @@ const onRegister = async () => {
 watchEffect(() => {
     if (success_message.value) error_message.value = "";
     if (error_message.value) success_message.value = "";
-})
+});
 </script>
 
 <template>

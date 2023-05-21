@@ -16,8 +16,9 @@ Clonar el proyecto
 Instalar dependencias
 
     composer install
+    npm install
 
-Desde la ruta del proyecti ejecutar 2 terminales.
+Desde la ruta del proyecto ejecutar 2 terminales.
 
 En la primera terminal ejecutar el siguiente comando para levantar el servicio del front
 

@@ -1,4 +1,4 @@
-// Api para realizar peticiones de tipo POST o GET
+// Api para realizar peticiones al back desde el front
 import axios from 'axios';
 import config from '@/config/config';
 

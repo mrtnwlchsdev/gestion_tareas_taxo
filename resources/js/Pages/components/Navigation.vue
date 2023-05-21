@@ -1,6 +1,6 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3'
-import { computed } from 'vue'
+import { Link } from "@inertiajs/inertia-vue3";
+import { computed } from "vue";
 
 // Ruta del evento para la conexión con el backend
 import routes from "@/routes";
@@ -13,21 +13,20 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-})
+});
 
 // Ruta de inicio configurada dependiendo de si el usuario está logueado o no
 const inicio = computed(() => {
     if (props.login) {
-        return '/tasks'
+        return "/tasks";
     } else {
-        return '/'
+        return "/";
     }
 });
 
 const logout = async () => {
     await api.get(routes.logout);
-}
-
+};
 </script>
 
 <template>
@@ -39,21 +38,9 @@ const logout = async () => {
                 <h1 class="text-lg text-center">Gestión de tareas</h1>
             </div>
             <ul class="flex flex-1 justify-end gap-x-10">
-                <Link :href="inicio">
-                    Inicio
-                </Link>
-                <Link
-                    v-if="!login"
-                    href="/login">
-                    Login
-                </Link>
-                <Link
-                    v-else
-                    href="/login"
-                    @click="logout"
-                >
-                    Salir
-                </Link>
+                <Link :href="inicio"> Inicio </Link>
+                <Link v-if="!login" href="/login"> Login </Link>
+                <Link v-else href="/login" @click="logout"> Salir </Link>
             </ul>
         </nav>
     </header>

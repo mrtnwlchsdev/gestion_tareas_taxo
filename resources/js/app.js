@@ -1,4 +1,4 @@
-import { pinia } from './pinia';
+import { pinia } from "./pinia";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 

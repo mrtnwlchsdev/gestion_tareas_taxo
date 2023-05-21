@@ -15,10 +15,16 @@ class TasksController extends Controller
     {
         $user = Auth::user();
 
-        // Paginacion de los datos realizada desde el backend
-        $tasks = Task::selectRaw('id, task_title, tags, task_description, favorite_task, completed_task')->where('user_id', $user->id)->paginate(9);
+        // Se realiza la consulta de todas las tareas asociadas a un usuario en especifico
+        $tasks = Task::selectRaw('id, task_title, tags, task_description, favorite_task, completed_task')->where('user_id', $user->id);
+        // Se paginan desde el back las tareas consultadas
+        $all_tasks = $tasks->get();
+        $pagination = $tasks->paginate(9);;
 
-        return Inertia::render('Pages/views/TasksView', ["tasks" => $tasks]);
+        return Inertia::render('Pages/views/TasksView', [
+            "tasks_pagination" => $pagination,
+            "all_tasks" => $all_tasks,
+        ]);
     }
 
     public function create()
@@ -39,7 +45,8 @@ class TasksController extends Controller
     }
 
 
-    public function destroy(Request $request) {
+    public function destroy(Request $request)
+    {
         $task = Task::find($request->id);
 
         if ($task) {
@@ -55,7 +62,8 @@ class TasksController extends Controller
     }
 
     // Actualizar el estado favorito de una tarea
-    public function updateFavoriteTask(Request $request) {
+    public function updateFavoriteTask(Request $request)
+    {
         $task = Task::find($request->id);
 
         if ($task) {
@@ -73,7 +81,8 @@ class TasksController extends Controller
     }
 
     // Actualizar el título y descripción de una tarea
-    public function updateTask(Request $request) {
+    public function updateTask(Request $request)
+    {
         $task = Task::find($request->id);
 
         if ($task) {
@@ -91,13 +100,15 @@ class TasksController extends Controller
         }
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         $task = Task::find($id);
 
         return Inertia::render('Pages/views/ShowView', ["data" => $task]);
     }
 
-    public function completeTask(Request $request) {
+    public function completeTask(Request $request)
+    {
         $task = Task::find($request->id);
 
         if ($task) {

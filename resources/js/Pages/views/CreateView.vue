@@ -41,7 +41,7 @@ const resetMessage = () => {
 const addTag = () => {
     if (tags.value.length === 4) return;
     if (tag.value && !tags.value.includes(tag.value))
-        tags.value.push(tag.value);
+        tags.value.push(tag.value.toLowerCase());
 
     tag.value = "";
 };
@@ -116,7 +116,10 @@ watchEffect(() => {
                 <section
                     class="p-8 flex items-start bg-light-grey rounded-md shadow-lg"
                 >
-                    <form class="flex flex-col gap-y-5 w-full">
+                    <form
+                        class="flex flex-col gap-y-5 w-full"
+                        autocomplete="off"
+                    >
                         <header>
                             <h1 class="text-2xl text-black">Registrar tarea</h1>
                         </header>
@@ -132,16 +135,17 @@ watchEffect(() => {
                                 class="flex items-center rounded-full py-1 px-2 w-1/4 bg-white"
                             >
                                 <input
-                                    class="text-gray-500 w-full focus:outline-none"
+                                    class="bg-white text-gray-500 w-full focus:outline-none"
                                     type="text"
                                     id="tag-name"
                                     maxlength="15"
                                     v-model="tag"
+                                    :disabled="tags.length === 4"
                                 />
                                 <span
                                     :class="[
                                         tags.length === 4
-                                            ? 'text-light-grey cursor-auto'
+                                            ? 'text-light-grey cursor-default'
                                             : 'text-black',
                                         'material-icons cursor-pointer bg-white select-none',
                                     ]"
@@ -159,7 +163,7 @@ watchEffect(() => {
                                     class="flex items-center py-1 justify-between bg-white px-2 rounded-full shadow-md"
                                     :key="index"
                                 >
-                                    <span class="leading-none truncate">{{
+                                    <span class="leading-8 truncate">{{
                                         item
                                     }}</span>
                                     <span

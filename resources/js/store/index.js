@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useTasksStore  = defineStore('tasksStore', {
+export const useTasksStore = defineStore("tasksStore", {
     state: () => ({
         tasks: [],
         regex: /^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+$/,
@@ -32,6 +32,6 @@ export const useTasksStore  = defineStore('tasksStore', {
                 }
                 return task;
             });
-        }
-    }
-})
+        },
+    },
+});

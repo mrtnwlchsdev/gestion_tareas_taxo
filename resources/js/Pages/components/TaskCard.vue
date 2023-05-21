@@ -14,7 +14,7 @@ import { useTasksStore } from "@/store";
 
 const tasksStore = useTasksStore();
 
-const emit = defineEmits(["updateTaskError"]);
+const emit = defineEmits(["updateTaskError", "filterTag"]);
 
 const props = defineProps({
     data: {
@@ -104,7 +104,7 @@ const tags = computed(() => {
                 <input
                     v-if="editing && data.id == task_id"
                     type="text"
-                    class="p-1 bg-light-grey text-gray-500 focus:outline-none"
+                    class="px-3 py-2 bg-light-grey text-gray-500 rounded-full focus:outline-none"
                     v-model="task_title"
                 />
                 <Link
@@ -150,6 +150,11 @@ const tags = computed(() => {
                     </section>
                 </article>
                 <span
+                    :title="
+                        data.favorite_task || favorite_task
+                            ? 'Quitar de favoritos'
+                            : 'Agregar a favoritos'
+                    "
                     :class="[
                         data.favorite_task || favorite_task
                             ? 'text-red-500'
@@ -160,42 +165,38 @@ const tags = computed(() => {
                 >
                     favorite
                 </span>
+                <span
+                    v-if="data.completed_task"
+                    class="text-green-500 cursor-default material-icons text-right duration-200 hover:text-green-500"
+                    @click="completeTask"
+                    title="Tarea completada"
+                >
+                    check_circle
+                </span>
             </article>
         </header>
 
-        <article class="flex gap-3 text-sm">
-            <span
+        <ul class="flex gap-3 text-sm">
+            <a
                 v-for="(item, index) in tags"
                 class="bg-light-grey shadow-md py-1 px-2 cursor-pointer text-blue-500"
+                @click="emit('filterTag', item)"
                 :key="index"
             >
                 {{ item }}
-            </span>
-        </article>
+            </a>
+        </ul>
 
         <section class="mt-5">
             <input
                 v-if="editing && data.id == task_id"
                 type="text"
-                class="w-full p-1 bg-light-grey text-gray-500 focus:outline-none"
+                class="w-full px-3 py-2 bg-light-grey text-gray-500 rounded-full focus:outline-none"
                 v-model="task_description"
             />
             <article v-else class="overflow-hidden truncate">
                 {{ data.task_description }}
             </article>
         </section>
-        <span
-            v-if="data.completed_task"
-            @click="completeTask"
-            :class="[
-                data.completed_task || completed_task
-                    ? 'text-green-500 cursor-auto'
-                    : 'text-gray-400 cursor-pointer',
-                'material-icons text-right duration-200 hover:text-green-500',
-            ]"
-            title="Completar"
-        >
-            check_circle
-        </span>
     </section>
 </template>
